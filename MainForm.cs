@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Translerater
             InitializeComponent();
         }
 
-        static string jsonPath = "C:\\Users\\ATENTS\\source\\repos\\Translerater\\Translerater\\key\\TestProject-7a58ef1e004b.json";
+        static string jsonPath = "TestProject-7a58ef1e004b.json";
         static string projectId = "testproject-1574121435570";
 
         GoogleCredential credential;
@@ -50,33 +51,73 @@ namespace Translerater
             var text = before;
             if (TextLengthCheck(text))
             {
-                var leng = DetectLanguage(text);
+                var lang = DetectLanguage(text);
+                string last = LanguageSelect(lang.Language);
 
-                if (!(leng.Language == "ko" || leng.Language == "en"))
+                if(last == string.Empty)
                 {
                     LanguageException();
                     return string.Empty;
                 }
 
-                string last = string.Empty;
-                switch (leng.Language)
-                {
-                    case "ko":
-                        last = "en";
-                        break;
-                    case "en":
-                        last = "ko";
-                        break;
-                }
                 var response = client.TranslateText(text, "ja");
-                response = client.TranslateText(response.TranslatedText, last);
-                return response.TranslatedText;
+                return client.TranslateText(response.TranslatedText, last).TranslatedText;
             }
             else
             {
                 LengthOver();
             }
             return string.Empty;
+        }
+
+        string LanguageSelect(string lang)
+        {
+            switch (lang)
+            {
+                case "ko":
+                    return "en";
+                case "en":
+                    return "ko";
+            }
+            return string.Empty;
+        }
+
+        public Detection DetectLanguage(string t)
+        {
+            return client.DetectLanguage(text: t);
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            if(filePath == string.Empty)
+            {
+                NotSelectFile();
+            }
+
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "textFile|*.txt|dat|*.dat";
+            dialog.ShowDialog();
+            dialog.DefaultExt = "txt";
+            string fileName = dialog.FileName;
+
+            if (fileName != string.Empty)
+            {
+                var result = Translate(fileData);
+                FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine(result);
+                sw.Close();
+                fs.Close();
+            }
+            FilePath.Text = string.Empty;
+            filePath = string.Empty;
+            fileData = string.Empty;
+            AfterTranslate.Text = string.Empty;
+            BeforeTranslate.Text = string.Empty;
+        }
+
+        private byte[] StringToByte(string str) {
+            return Encoding.UTF8.GetBytes(str);
         }
 
         void LanguageException()
@@ -89,53 +130,18 @@ namespace Translerater
             MessageBox.Show("문자열이 너무 깁니다.", "최대 문자 수 초과");
         }
 
-        public Detection DetectLanguage(string t)
-        {
-            var detection = client.DetectLanguage(text: t);
-            Console.WriteLine(
-                $"{detection.Language}\tConfidence: {detection.Confidence}");
-            return detection;
-        }
-
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            if(filePath == string.Empty)
-            {
-                NotSelectFile();
-            }
-
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.ShowDialog();
-            string select_path = dialog.SelectedPath;
-
-            //if (saveFileDialog1.FileName != "")
-            //{
-            //    System.IO.FileStream fs =
-            //        (System.IO.FileStream)saveFileDialog1.
-            //    var text = System.IO.File.ReadAllText(filePath);
-            //    var result = Translate(text);
-            //    var arr = StringToByte(result);
-            //    fs.Write(arr,0,arr.Length-1);
-            //    fs.Close();
-            //}
-            FilePath.Text = string.Empty;
-            filePath = string.Empty;
-        }
-        private string ByteToString(byte[] strByte)
-        {
-            return Encoding.Default.GetString(strByte);
-        }
-
-        private byte[] StringToByte(string str) {
-            return Encoding.UTF8.GetBytes(str);
-        }
-
         void NotSelectFile()
         {
             MessageBox.Show("번역할 파일이 선택되지 않았습니다.", "번역할 파일 미 선택");
         }
 
+        void ExtensionError()
+        {
+            MessageBox.Show("텍스트 파일이 아닙니다.", "확장자 에러");
+        }
+
         string filePath;
+        string fileData;
         private void FileSelectButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
@@ -145,14 +151,22 @@ namespace Translerater
 
             filePath = openFile.FileName;
             FilePath.Text = filePath;
+
+            if(filePath == string.Empty || Path.GetExtension(filePath)!=".txt")
+            {
+                ExtensionError();
+                return;
+            }
+            fileData = File.ReadAllText(filePath);
+            BeforeTranslate.Text = fileData;
         }
 
         private void HelpButton_Click(object sender, EventArgs e)
         {
             Form form = new Form();
-            form.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
-            form.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            form.ClientSize = new System.Drawing.Size(800, 450);
+            form.AutoScaleDimensions = new SizeF(7F, 12F);
+            form.AutoScaleMode = AutoScaleMode.Font;
+            form.ClientSize = new Size(800, 450);
             form.ResumeLayout(false);
             form.PerformLayout();
             form.Show();

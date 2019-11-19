@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.852
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translater", "Translerater\Translater.csproj", "{60018E01-2E8D-4D0B-8685-924ADCB17DA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translater", "Translater.csproj", "{60018E01-2E8D-4D0B-8685-924ADCB17DA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D697AE67-DF89-4054-8172-16C00AEA4841}
+		SolutionGuid = {73AA583C-267F-4286-B368-2329EBFFFA07}
 	EndGlobalSection
 EndGlobal
