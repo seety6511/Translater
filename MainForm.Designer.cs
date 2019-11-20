@@ -1,4 +1,6 @@
-﻿namespace Translerater
+﻿using System.Windows.Forms;
+
+namespace Translerater
 {
     partial class MainForm
     {
@@ -36,29 +38,31 @@
             this.AfterLabel = new System.Windows.Forms.Label();
             this.FilePath = new System.Windows.Forms.TextBox();
             this.FilePathLabel = new System.Windows.Forms.Label();
-            this.HelpButton = new System.Windows.Forms.Button();
+            this.HelpB = new System.Windows.Forms.Button();
             this.FileSelectButton = new System.Windows.Forms.Button();
+            this.ClearButton = new System.Windows.Forms.Button();
+            this.TranslateResult = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // BeforeTranslate
             // 
-            this.BeforeTranslate.Location = new System.Drawing.Point(66, 42);
+            this.BeforeTranslate.Location = new System.Drawing.Point(12, 45);
             this.BeforeTranslate.Multiline = true;
             this.BeforeTranslate.Name = "BeforeTranslate";
-            this.BeforeTranslate.Size = new System.Drawing.Size(278, 257);
+            this.BeforeTranslate.Size = new System.Drawing.Size(244, 257);
             this.BeforeTranslate.TabIndex = 0;
             // 
             // AfterTranslate
             // 
-            this.AfterTranslate.Location = new System.Drawing.Point(464, 42);
+            this.AfterTranslate.Location = new System.Drawing.Point(264, 45);
             this.AfterTranslate.Multiline = true;
             this.AfterTranslate.Name = "AfterTranslate";
-            this.AfterTranslate.Size = new System.Drawing.Size(278, 257);
+            this.AfterTranslate.Size = new System.Drawing.Size(237, 257);
             this.AfterTranslate.TabIndex = 1;
             // 
             // TranslateButton
             // 
-            this.TranslateButton.Location = new System.Drawing.Point(366, 231);
+            this.TranslateButton.Location = new System.Drawing.Point(262, 325);
             this.TranslateButton.Name = "TranslateButton";
             this.TranslateButton.Size = new System.Drawing.Size(75, 23);
             this.TranslateButton.TabIndex = 2;
@@ -68,7 +72,7 @@
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(464, 365);
+            this.SaveButton.Location = new System.Drawing.Point(343, 325);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 3;
@@ -79,7 +83,7 @@
             // BeforeLabel
             // 
             this.BeforeLabel.AutoSize = true;
-            this.BeforeLabel.Location = new System.Drawing.Point(181, 27);
+            this.BeforeLabel.Location = new System.Drawing.Point(10, 22);
             this.BeforeLabel.Name = "BeforeLabel";
             this.BeforeLabel.Size = new System.Drawing.Size(45, 12);
             this.BeforeLabel.TabIndex = 4;
@@ -88,7 +92,7 @@
             // AfterLabel
             // 
             this.AfterLabel.AutoSize = true;
-            this.AfterLabel.Location = new System.Drawing.Point(590, 26);
+            this.AfterLabel.Location = new System.Drawing.Point(262, 22);
             this.AfterLabel.Name = "AfterLabel";
             this.AfterLabel.Size = new System.Drawing.Size(45, 12);
             this.AfterLabel.TabIndex = 5;
@@ -96,33 +100,33 @@
             // 
             // FilePath
             // 
-            this.FilePath.Location = new System.Drawing.Point(66, 367);
+            this.FilePath.Location = new System.Drawing.Point(12, 356);
             this.FilePath.Name = "FilePath";
-            this.FilePath.Size = new System.Drawing.Size(278, 21);
+            this.FilePath.Size = new System.Drawing.Size(244, 21);
             this.FilePath.TabIndex = 6;
             // 
             // FilePathLabel
             // 
             this.FilePathLabel.AutoSize = true;
-            this.FilePathLabel.Location = new System.Drawing.Point(64, 342);
+            this.FilePathLabel.Location = new System.Drawing.Point(12, 341);
             this.FilePathLabel.Name = "FilePathLabel";
-            this.FilePathLabel.Size = new System.Drawing.Size(153, 12);
+            this.FilePathLabel.Size = new System.Drawing.Size(149, 12);
             this.FilePathLabel.TabIndex = 7;
-            this.FilePathLabel.Text = "번역 하고 싶은 파일의 경로";
+            this.FilePathLabel.Text = "번역하고 싶은 텍스트 파일";
             // 
-            // HelpButton
+            // HelpB
             // 
-            this.HelpButton.Location = new System.Drawing.Point(667, 415);
-            this.HelpButton.Name = "HelpButton";
-            this.HelpButton.Size = new System.Drawing.Size(75, 23);
-            this.HelpButton.TabIndex = 8;
-            this.HelpButton.Text = "Help";
-            this.HelpButton.UseVisualStyleBackColor = true;
-            this.HelpButton.Click += new System.EventHandler(this.HelpButton_Click);
+            this.HelpB.Location = new System.Drawing.Point(343, 356);
+            this.HelpB.Name = "HelpB";
+            this.HelpB.Size = new System.Drawing.Size(75, 23);
+            this.HelpB.TabIndex = 8;
+            this.HelpB.Text = "Help";
+            this.HelpB.UseVisualStyleBackColor = true;
+            this.HelpB.Click += new System.EventHandler(this.HelpButton_Click);
             // 
             // FileSelectButton
             // 
-            this.FileSelectButton.Location = new System.Drawing.Point(350, 365);
+            this.FileSelectButton.Location = new System.Drawing.Point(262, 356);
             this.FileSelectButton.Name = "FileSelectButton";
             this.FileSelectButton.Size = new System.Drawing.Size(75, 23);
             this.FileSelectButton.TabIndex = 9;
@@ -130,13 +134,38 @@
             this.FileSelectButton.UseVisualStyleBackColor = true;
             this.FileSelectButton.Click += new System.EventHandler(this.FileSelectButton_Click);
             // 
+            // ClearButton
+            // 
+            this.ClearButton.Location = new System.Drawing.Point(424, 325);
+            this.ClearButton.Name = "ClearButton";
+            this.ClearButton.Size = new System.Drawing.Size(75, 23);
+            this.ClearButton.TabIndex = 10;
+            this.ClearButton.Text = "비우기";
+            this.ClearButton.UseVisualStyleBackColor = true;
+            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
+            // 
+            // TranslateResult
+            // 
+            this.TranslateResult.FormattingEnabled = true;
+            this.TranslateResult.Items.AddRange(new object[] {
+            "영어",
+            "한국어",
+            "일어"});
+            this.TranslateResult.Location = new System.Drawing.Point(378, 19);
+            this.TranslateResult.Name = "TranslateResult";
+            this.TranslateResult.Size = new System.Drawing.Size(121, 20);
+            this.TranslateResult.TabIndex = 12;
+            this.TranslateResult.Text = "영어";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(513, 394);
+            this.Controls.Add(this.TranslateResult);
+            this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.FileSelectButton);
-            this.Controls.Add(this.HelpButton);
+            this.Controls.Add(this.HelpB);
             this.Controls.Add(this.FilePathLabel);
             this.Controls.Add(this.FilePath);
             this.Controls.Add(this.AfterLabel);
@@ -153,7 +182,6 @@
         }
 
         #endregion
-
         private System.Windows.Forms.TextBox BeforeTranslate;
         private System.Windows.Forms.TextBox AfterTranslate;
         private System.Windows.Forms.Button TranslateButton;
@@ -162,8 +190,9 @@
         private System.Windows.Forms.Label AfterLabel;
         private System.Windows.Forms.TextBox FilePath;
         private System.Windows.Forms.Label FilePathLabel;
-        private System.Windows.Forms.Button HelpButton;
+        private System.Windows.Forms.Button HelpB;
         private System.Windows.Forms.Button FileSelectButton;
+        private System.Windows.Forms.Button ClearButton;
+        private ComboBox TranslateResult;
     }
 }
-

@@ -1,31 +1,25 @@
 ﻿using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Storage.V1;
 using Google.Cloud.Translation.V2;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
+        
 namespace Translerater
-{
+{       
     public partial class MainForm : Form
-    {
+    {   
+        string filePath;
+        string fileData;
+        TranslationClient client;
+        GoogleCredential credential;
+        static string jsonPath = "testproject-1574121435570-7bc539479835.json";
+
         public MainForm()
         {
             InitializeComponent();
         }
-
-        static string jsonPath = "TestProject-7a58ef1e004b.json";
-        static string projectId = "testproject-1574121435570";
-
-        GoogleCredential credential;
-        TranslationClient client;
+        
         void CredentialCreate()
         {
             if (credential == null)
@@ -52,7 +46,7 @@ namespace Translerater
             if (TextLengthCheck(text))
             {
                 var lang = DetectLanguage(text);
-                string last = LanguageSelect(lang.Language);
+                string last = TranslateSelect(TranslateResult.Text);
 
                 if(last == string.Empty)
                 {
@@ -60,7 +54,9 @@ namespace Translerater
                     return string.Empty;
                 }
 
-                var response = client.TranslateText(text, "ja");
+                TranslationResult response = null;
+                if (last == "ko" || last == "en")
+                    response = client.TranslateText(text, "ja");
                 return client.TranslateText(response.TranslatedText, last).TranslatedText;
             }
             else
@@ -70,14 +66,16 @@ namespace Translerater
             return string.Empty;
         }
 
-        string LanguageSelect(string lang)
+        string TranslateSelect(string lang)
         {
             switch (lang)
             {
-                case "ko":
-                    return "en";
-                case "en":
+                case "한국어":
                     return "ko";
+                case "영어":
+                    return "en";
+                case "일어":
+                    return "ja";
             }
             return string.Empty;
         }
@@ -95,7 +93,7 @@ namespace Translerater
             }
 
             SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "textFile|*.txt|dat|*.dat";
+            dialog.Filter = "텍스트 파일|*.txt|DAT 확장자|*.dat";
             dialog.ShowDialog();
             dialog.DefaultExt = "txt";
             string fileName = dialog.FileName;
@@ -116,8 +114,39 @@ namespace Translerater
             BeforeTranslate.Text = string.Empty;
         }
 
-        private byte[] StringToByte(string str) {
-            return Encoding.UTF8.GetBytes(str);
+        private void FileSelectButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFile = new OpenFileDialog();
+            openFile.Filter = "텍스트 파일|*.txt";
+            openFile.Title = "번역하고싶은 텍스트 파일 선택";
+            openFile.ShowDialog();
+
+            filePath = openFile.FileName;
+            FilePath.Text = filePath;
+
+            if(filePath == string.Empty || Path.GetExtension(filePath)!=".txt")
+            {
+                ExtensionError();
+                return;
+            }
+            var fd = File.ReadAllBytes(filePath);
+            fileData = ByteToString(fd);
+            BeforeTranslate.Text = fileData;
+        }
+
+        private void HelpButton_Click(object sender, EventArgs e)
+        {
+            var help = new HelpForm();
+            help.Visible = true;
+        }
+
+        private void ClearButton_Click(object sender, EventArgs e)
+        {
+            FilePath.Text = string.Empty;
+            filePath = string.Empty;
+            fileData = string.Empty;
+            AfterTranslate.Text = string.Empty;
+            BeforeTranslate.Text = string.Empty;
         }
 
         void LanguageException()
@@ -140,36 +169,15 @@ namespace Translerater
             MessageBox.Show("텍스트 파일이 아닙니다.", "확장자 에러");
         }
 
-        string filePath;
-        string fileData;
-        private void FileSelectButton_Click(object sender, EventArgs e)
+        private byte[] StringToByte(string str)
         {
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "text|*.txt";
-            openFile.Title = "번역하고싶은 텍스트 파일 선택";
-            openFile.ShowDialog();
-
-            filePath = openFile.FileName;
-            FilePath.Text = filePath;
-
-            if(filePath == string.Empty || Path.GetExtension(filePath)!=".txt")
-            {
-                ExtensionError();
-                return;
-            }
-            fileData = File.ReadAllText(filePath);
-            BeforeTranslate.Text = fileData;
+            return Encoding.UTF8.GetBytes(str);
         }
 
-        private void HelpButton_Click(object sender, EventArgs e)
+        private string ByteToString(byte[] strByte)
         {
-            Form form = new Form();
-            form.AutoScaleDimensions = new SizeF(7F, 12F);
-            form.AutoScaleMode = AutoScaleMode.Font;
-            form.ClientSize = new Size(800, 450);
-            form.ResumeLayout(false);
-            form.PerformLayout();
-            form.Show();
+            return Encoding.Default.GetString(strByte);
         }
-    }
-}
+    }   
+}       
+        
