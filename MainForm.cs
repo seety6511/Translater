@@ -39,47 +39,6 @@ namespace Translerater
             AfterTranslate.Text = Translate(BeforeTranslate.Text);
         }
 
-        string Translate(string before)
-        {
-            CredentialCreate();
-            var text = before;
-            if (TextLengthCheck(text))
-            {
-                var lang = DetectLanguage(text);
-                string last = TranslateSelect(TranslateResult.Text);
-
-                if(last == string.Empty)
-                {
-                    LanguageException();
-                    return string.Empty;
-                }
-
-                TranslationResult response = null;
-                if (last == "ko" || last == "en")
-                    response = client.TranslateText(text, "ja");
-                return client.TranslateText(response.TranslatedText, last).TranslatedText;
-            }
-            else
-            {
-                LengthOver();
-            }
-            return string.Empty;
-        }
-
-        string TranslateSelect(string lang)
-        {
-            switch (lang)
-            {
-                case "한국어":
-                    return "ko";
-                case "영어":
-                    return "en";
-                case "일어":
-                    return "ja";
-            }
-            return string.Empty;
-        }
-
         public Detection DetectLanguage(string t)
         {
             return client.DetectLanguage(text: t);
@@ -149,6 +108,16 @@ namespace Translerater
             BeforeTranslate.Text = string.Empty;
         }
 
+        private byte[] StringToByte(string str)
+        {
+            return Encoding.UTF8.GetBytes(str);
+        }
+
+        private string ByteToString(byte[] strByte)
+        {
+            return Encoding.Default.GetString(strByte);
+        }
+
         void LanguageException()
         {
             MessageBox.Show("영어나 한글이 아닙니다.", "언어 감지 실패");
@@ -169,15 +138,45 @@ namespace Translerater
             MessageBox.Show("텍스트 파일이 아닙니다.", "확장자 에러");
         }
 
-        private byte[] StringToByte(string str)
+        string Translate(string before)
         {
-            return Encoding.UTF8.GetBytes(str);
+            CredentialCreate();
+            var text = before;
+            if (TextLengthCheck(text))
+            {
+                var lang = DetectLanguage(text);
+                string last = TranslateSelect(TranslateResult.Text);
+
+                if (last == string.Empty)
+                {
+                    LanguageException();
+                    return string.Empty;
+                }
+
+                TranslationResult response = null;
+                if (last == "ko" || last == "en")
+                    response = client.TranslateText(text, "ja");
+                return client.TranslateText(response.TranslatedText, last).TranslatedText;
+            }
+            else
+            {
+                LengthOver();
+            }
+            return string.Empty;
         }
 
-        private string ByteToString(byte[] strByte)
+        string TranslateSelect(string lang)
         {
-            return Encoding.Default.GetString(strByte);
+            switch (lang)
+            {
+                case "한국어":
+                    return "ko";
+                case "영어":
+                    return "en";
+                case "일어":
+                    return "ja";
+            }
+            return string.Empty;
         }
-    }   
+    }
 }       
-        

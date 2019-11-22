@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Translerater
 {
@@ -178,7 +179,6 @@ namespace Translerater
             this.Text = "Translater";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
